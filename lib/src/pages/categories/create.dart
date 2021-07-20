@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/src/app/controllers/CategoryController.dart';
-import 'package:flutter_ecommerce/src/app/controllers/UserController.dart';
+import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
 import 'package:flutter_ecommerce/src/pages/categories/index.dart';
-import 'package:flutter_ecommerce/src/pages/users/index.dart';
 
 
 class CategoryCreate extends StatefulWidget {
@@ -13,21 +12,19 @@ class CategoryCreate extends StatefulWidget {
 }
 
 class _CategoryCreateState extends State<CategoryCreate> {
-  TextEditingController name_controller = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   void save() {
-    CategoryController user = CategoryController();
+    CategoryController category = CategoryController();
     Map a = {
-      'username'  : name_controller.text,
+      'name'  : nameController.text,
       'created_at': FieldValue.serverTimestamp()
     };
-    user.store(a).then((value) {
+    category.store(a).then((value) {
       print(value);
       if (value != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryIndex()));
-        setState(() {
-          
-        });
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryIndex()));
+        SnackBarMessages.successSnackBar(context, 'Data added successfully!');
       }
     });
   }
@@ -46,7 +43,7 @@ class _CategoryCreateState extends State<CategoryCreate> {
         child: Column(
           children: [
             TextFormField(
-              controller: name_controller,
+              controller: nameController,
               decoration: InputDecoration(labelText: 'Name'),
             ),
           ],

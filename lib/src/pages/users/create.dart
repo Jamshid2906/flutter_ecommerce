@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/src/app/controllers/UserController.dart';
+import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
 import 'package:flutter_ecommerce/src/pages/users/index.dart';
 
 
@@ -10,24 +11,22 @@ class UserCreate extends StatefulWidget {
 }
 
 class _UserCreateState extends State<UserCreate> {
-  TextEditingController username_controller = TextEditingController();
-  TextEditingController phone_controller = TextEditingController();
-  TextEditingController password_controller = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   void save() {
     UserController user = UserController();
     Map a = {
-      'username': username_controller.text,
-      'phone': phone_controller.text,
-      'password': password_controller.text,
+      'username': usernameController.text,
+      'phone': phoneController.text,
+      'password': passwordController.text,
     };
     user.store(a).then((value) {
       print(value);
       if (value != null) {
         Navigator.push(context, MaterialPageRoute(builder: (context)=>UserIndex()));
-        setState(() {
-          
-        });
+        SnackBarMessages.successSnackBar(context, 'Data added successfully!');
       }
     });
   }
@@ -46,15 +45,15 @@ class _UserCreateState extends State<UserCreate> {
         child: Column(
           children: [
             TextFormField(
-              controller: username_controller,
+              controller: usernameController,
               decoration: InputDecoration(labelText: 'Username'),
             ),
             TextFormField(
-              controller: phone_controller,
+              controller: phoneController,
               decoration: InputDecoration(labelText: 'Phone'),
             ),
             TextFormField(
-              controller: password_controller,
+              controller: passwordController,
               decoration: InputDecoration(labelText: 'Password'),
             ),
           ],

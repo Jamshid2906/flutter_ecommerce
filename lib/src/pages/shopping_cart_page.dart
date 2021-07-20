@@ -104,6 +104,7 @@ class ShoppingCartPage extends StatelessWidget {
   }
 
   Widget _submitButton(BuildContext context) {
+    // ignore: deprecated_member_use
     return FlatButton(
         onPressed: () {},
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

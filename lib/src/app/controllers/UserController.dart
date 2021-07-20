@@ -1,27 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_ecommerce/src/app/database/database.dart';
 class UserController{
-  late Database db;
+  late CollectionReference user;
 
   UserController(){
-    this.db = new Database();
+    this.user = new Database().firestore.collection('users');
   }
   Future<List?> index() async{
     QuerySnapshot? querySnapshot;
-    List docs = [];
-      querySnapshot = await db.firestore.collection('users').orderBy('username').get();
-      if(querySnapshot.docs.isNotEmpty){
-        for(var doc in querySnapshot.docs.toList()){
-          print(doc.runtimeType);
-          Map<String,dynamic> a = {
-            'id': doc.id,
-            'username': doc['username'],
-            'phone':doc['phone']
-          };
-          docs.add(a);
-        }
-        return docs;
-      }
+    querySnapshot = await user.orderBy('username').get();
+
+    return querySnapshot.docs.toList();
   }
 
   Future store(Map request) async {
@@ -31,15 +20,28 @@ class UserController{
       'password' : request['password'] 
     };
 
-    return await db.firestore.collection('users').add(data);
+    return await user.add(data);
   }
 
   Future update(Map request, String id) async {
-    return await db.firestore.collection('users').doc(id).update({
+    return await user.doc(id).update({
       'username' : request['username'],
       'phone'    : request['phone'], 
       'password' : request['password']
     });
+  }
+
+  Future edit(String id) async{
+    
+    return await user.doc(id).get();
+  }
+
+  // Delete method
+  Future delete(String id) async
+  {
+    await user.doc(id).delete();
+
+    return true;
   }
 
 }

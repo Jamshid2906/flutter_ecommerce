@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce/src/app/controllers/ProductController.dart';
 import 'package:flutter_ecommerce/src/app/controllers/UserController.dart';
+import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
 import 'package:flutter_ecommerce/src/pages/products/index.dart';
-import 'package:flutter_ecommerce/src/pages/users/index.dart';
 
 
 class ProductCreate extends StatefulWidget {
@@ -11,21 +12,22 @@ class ProductCreate extends StatefulWidget {
 }
 
 class _ProductCreateState extends State<ProductCreate> {
-  TextEditingController name_controller = TextEditingController();
-  TextEditingController price_controller = TextEditingController();
-  TextEditingController desc_controller = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descController = TextEditingController();
 
   void save() {
-    UserController user = UserController();
+    ProductController product = ProductController();
     Map a = {
-      'name': name_controller.text,
-      'price': price_controller.text,
-      'desc': desc_controller.text,
+      'name': nameController.text,
+      'price': priceController.text,
+      'desc': descController.text,
     };
-    user.store(a).then((value) {
+    product.store(a).then((value) {
       print(value);
       if (value != null) {
         Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductIndex()));
+        SnackBarMessages.successSnackBar(context, 'Data added successfully!');
       }
     });
   }
@@ -34,7 +36,7 @@ class _ProductCreateState extends State<ProductCreate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Add'),
+        title: Text('Product Add'),
         leading:IconButton(onPressed: (){
           Navigator.pop(context);
         }, icon: Icon(Icons.arrow_back_ios_new))
@@ -44,19 +46,19 @@ class _ProductCreateState extends State<ProductCreate> {
         child: Column(
           children: [
             TextFormField(
-              controller: name_controller,
+              controller: nameController,
               decoration: InputDecoration(labelText: 'Name'),
             ),
             TextFormField(
               keyboardType: TextInputType.number,
-              controller: price_controller,
+              controller: priceController,
               decoration: InputDecoration(labelText: 'Price'),
             ),
             TextFormField(
               keyboardType: TextInputType.multiline,
               // textInputAction: TextInputAction.newline,
               maxLines: 5,
-              controller: desc_controller, 
+              controller: descController, 
               decoration: InputDecoration(labelText: 'Description'),
             ),
           ],
