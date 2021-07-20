@@ -2,17 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_ecommerce/src/app/database/database.dart';
 
 class ProductController {
-  late Database db;
+  late CollectionReference product;
 
   /// ProductController consturctor
   /// @return void
   ProductController() {
-    this.db = Database();
+    this.product = Database().firestore.collection('products');
   }
 
   Future<List?> index() async {
     QuerySnapshot querySnapshot;
-    querySnapshot = await db.firestore.collection('products').get();
+    querySnapshot = await product.get();
 
     return querySnapshot.docs.toList();
   }
@@ -22,10 +22,10 @@ class ProductController {
       'name'  : request['name'],
       'price' : request['price'],
       'desc'  : request['desc'],
-      'cat_id': request['cat_id']
+      'cat_id': request['cat_id'] ?? 1
     };
 
-    return await db.firestore.collection('products').add(data);
+    return await product.add(data);
   }
 
   Future update(Map request, String id) async {
@@ -35,6 +35,19 @@ class ProductController {
       'desc' : request['desc'],
     };
 
-    return await db.firestore.collection('products').doc(id).update(data);
+    return await product.doc(id).update(data);
+  }
+
+  Future edit(String id) async {
+    
+    return await product.doc(id).get();
+  }
+
+  // Delete method
+  Future delete(String id) async
+  {
+    await product.doc(id).delete();
+
+    return true;
   }
 }

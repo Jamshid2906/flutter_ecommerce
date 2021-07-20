@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce/authState.dart';
 import 'package:flutter_ecommerce/src/config/route.dart';
 import 'package:flutter_ecommerce/src/pages/mainPage.dart';
 import 'package:flutter_ecommerce/src/pages/product_detail.dart';
@@ -24,17 +25,18 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      routes: Routes.getRoute(),
-      onGenerateRoute: (RouteSettings settings) {
-        if (settings.name!.contains('detail')) {
-          return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => ProductDetailPage());
-        } else {
-          return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => MainPage());
-        }
-      },
-      initialRoute: "MainPage",
+      // routes: Routes.getRoute(),
+      // onGenerateRoute: (RouteSettings settings) {
+      //   if (settings.name!.contains('detail')) {
+      //     return MaterialPageRoute<bool>(
+      //         builder: (BuildContext context) => ProductDetailPage());
+      //   } else {
+      //     return MaterialPageRoute<bool>(
+      //         builder: (BuildContext context) => AuthStateWidget());
+      //   }
+      // },
+      home: AuthStateWidget(),
+      // initialRoute: "MainPage",
     );
   }
 }

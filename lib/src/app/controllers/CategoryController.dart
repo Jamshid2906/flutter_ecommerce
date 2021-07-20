@@ -3,26 +3,18 @@ import 'package:flutter_ecommerce/src/app/database/database.dart';
 
 class CategoryController {
 
-  late Database db;
+  late CollectionReference category;
 
   CategoryController(){
-    this.db = Database();
+    this.category = Database().firestore.collection('categories');
   }
 
   Future<List?> index() async {
-    List? items;
     QuerySnapshot querySnapshot;
-    querySnapshot =await db.firestore.collection('categories').get();
+    querySnapshot = await category.get();
     if(querySnapshot.docs.isNotEmpty){
-      for(var doc in querySnapshot.docs.toList()){
-        items!.add({
-          'name'       : doc['name'],
-          'created_at' : doc['created_at'],
-        });
-      }
+      return querySnapshot.docs.toList();
     }
-
-    return items;
   }
 
   Future store(Map request) async{
@@ -31,7 +23,7 @@ class CategoryController {
       'created_at' : request['created_at'],
     };
 
-    return await db.firestore.collection('categories').add(data);
+    return await category.add(data);
   }
 
   Future update(Map request, String id) async{
@@ -39,7 +31,22 @@ class CategoryController {
       'name'       : request['name'],
       'created_at' : request['created_at'],
     };
+    print('Controller 34 34 34 ');
+    var update =  category.doc(id).set(data);
+    return update;
+  }
 
-    return await db.firestore.collection('categories').doc(id).update(data);
+  // Edit method
+  Future edit(String id) async {
+
+    return await category.doc(id).get();
+  }
+
+  // Delete method
+  Future delete(String id) async
+  {
+    await category.doc(id).delete();
+
+    return true;
   }
 }

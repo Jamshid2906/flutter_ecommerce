@@ -279,6 +279,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   }
 
   Widget _sizeWidget(String text,
+      // ignore: unused_element
       {Color color = LightColor.iconColor, bool isSelected = false}) {
     return Container(
       padding: EdgeInsets.all(10),

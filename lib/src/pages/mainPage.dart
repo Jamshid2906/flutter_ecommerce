@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce/src/app/controllers/AuthController.dart';
+import 'package:flutter_ecommerce/src/pages/auth/signIn.dart';
 import 'package:flutter_ecommerce/src/pages/categories/index.dart';
 import 'package:flutter_ecommerce/src/pages/home_page.dart';
-import 'package:flutter_ecommerce/src/pages/product_detail.dart';
 import 'package:flutter_ecommerce/src/pages/products/index.dart';
 import 'package:flutter_ecommerce/src/pages/shopping_cart_page.dart';
 import 'package:flutter_ecommerce/src/pages/users/index.dart';
@@ -38,21 +39,32 @@ class _MainPageState extends State<MainPage> {
             // onTap: () => _scaffoldKey.currentState!.openDrawer(),
             child: _icon(Icons.sort, color: Colors.black54),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(13)),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Color(0xfff8f8f8),
-                      blurRadius: 10,
-                      spreadRadius: 10),
-                ],
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>SignIn())); 
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(13)),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).backgroundColor,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Color(0xfff8f8f8),
+                        blurRadius: 10,
+                        spreadRadius: 10),
+                  ],
+                ),
+                child: Image.asset("assets/user.png"),
               ),
-              child: Image.asset("assets/user.png"),
             ),
-          ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)))
+          ),GestureDetector(
+            onTap:(){
+              AuthController().signOut();
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>SignIn()));
+            },
+            child:Icon(Icons.logout)
+          )
         ],
       ),
     );

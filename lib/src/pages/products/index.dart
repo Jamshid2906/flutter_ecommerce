@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/src/app/controllers/ProductController.dart';
+import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
 import 'package:flutter_ecommerce/src/pages/mainPage.dart';
 import 'package:flutter_ecommerce/src/pages/products/create.dart';
 
@@ -11,6 +12,17 @@ class ProductIndex extends StatefulWidget {
 }
 
 class _ProductIndexState extends State<ProductIndex> {
+
+  void _delete(String id){
+    ProductController().delete(id).then((value) {
+      if(value == true) {
+        SnackBarMessages.successSnackBar(context, 'Item Deleted successfullty!');
+        Navigator.pop(context);
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,12 +47,23 @@ class _ProductIndexState extends State<ProductIndex> {
                   },
                   // tileColor:Colors.red,
                   subtitle: Text('Price ${snapshot.data![index]['price']}'),
-                  leading: Icon(Icons.favorite),
+                  leading: Icon(Icons.production_quantity_limits_sharp),
                   title: Text(snapshot.data![index]['name']),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
-                    // onPressed: (){},
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(context: context, builder: (context){  
+                        return AlertDialog(
+                          title: Text('Delete Item'),
+                          content: Text('Are you sure to delete item?'),
+                          actions: [
+                            ElevatedButton(onPressed: (){}, child: Text('Cancel')),
+                            ElevatedButton(onPressed: (){_delete(snapshot.data![index].id);}, 
+                            child: Text('Coniform')),
+                          ],
+                        );
+                      });
+                    },
                   ),
                 );
               },
