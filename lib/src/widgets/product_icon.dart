@@ -10,7 +10,8 @@ class ProductIcon extends StatelessWidget {
   // final String text;
   final ValueChanged<Category> onSelected;
   final Category? model;
-  ProductIcon({Key? key, this.model, required this.onSelected}) : super(key: key);
+  ProductIcon({Key? key, this.model, required this.onSelected})
+      : super(key: key);
 
   Widget build(BuildContext context) {
     return model!.id == null
@@ -26,7 +27,8 @@ class ProductIcon extends StatelessWidget {
                     ? LightColor.background
                     : Colors.transparent,
                 border: Border.all(
-                  color: model!.isSelected ? LightColor.orange : LightColor.grey,
+                  color:
+                      model!.isSelected ? LightColor.orange : LightColor.grey,
                   width: model!.isSelected ? 2 : 1,
                 ),
                 boxShadow: <BoxShadow>[

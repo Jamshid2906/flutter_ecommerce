@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/src/app/controllers/UserController.dart';
-import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
-import 'package:flutter_ecommerce/src/pages/users/index.dart';
+import 'package:flutter_ecommerce/src/app/providers/UserProvider.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class UserEdit extends StatefulWidget {
@@ -10,7 +10,12 @@ class UserEdit extends StatefulWidget {
 
   @override
   _UserEditState createState() => _UserEditState();
+   Widget screen() => ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      builder: (context, child) => UserEdit(id:id)
+    );
 }
+
 
 class _UserEditState extends State<UserEdit> {
 
@@ -18,20 +23,7 @@ class _UserEditState extends State<UserEdit> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void _update() {
-    Map a = {
-      'username': usernameController.text,
-      'phone': phoneController.text,
-      'password': passwordController.text,
-    };
-    UserController().update(a,widget.id).then((value) {
-      print(value);
-      if (value != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>UserIndex()));
-        SnackBarMessages.successSnackBar(context, 'Data updated successfully!');
-      }
-    });
-  }
+  
 
   @override
   void initState() {
@@ -49,6 +41,9 @@ class _UserEditState extends State<UserEdit> {
 
   @override
   Widget build(BuildContext context) {
+ 
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('User Edit'),
@@ -77,7 +72,9 @@ class _UserEditState extends State<UserEdit> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
-        onPressed: _update,
+        onPressed: (){
+          userProvider.update(usernameController.text, phoneController.text, passwordController.text, widget.id, context);
+        },
       ),
     );
   }

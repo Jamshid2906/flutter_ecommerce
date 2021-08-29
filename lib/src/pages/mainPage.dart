@@ -148,21 +148,21 @@ class _MainPageState extends State<MainPage> {
             title: Text('Users'),
             leading: Icon(Icons.supervised_user_circle_sharp),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => UserIndex()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => UserIndex.screen()));
             },
           ),
           ListTile(
             leading: Icon(Icons.category),
             title: Text('Categories'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryIndex()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryIndex.screen()));
             },
           ),
           ListTile(
             leading: Icon(Icons.shopping_cart_sharp),
             title: Text('Products'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductIndex()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductIndex.screen()));
             },
           ),
         ],

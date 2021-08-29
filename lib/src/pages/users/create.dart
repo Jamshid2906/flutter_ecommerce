@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ecommerce/src/app/controllers/UserController.dart';
-import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
-import 'package:flutter_ecommerce/src/pages/users/index.dart';
+import 'package:flutter_ecommerce/src/app/providers/UserProvider.dart';
+import 'package:provider/provider.dart';
 
 
 class UserCreate extends StatefulWidget {
   UserCreate({Key? key}) : super(key: key);
   @override
   _UserCreateState createState() => _UserCreateState();
+
+  static Widget screen() => ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      builder: (context, child) => UserCreate()
+    );
 }
 
 class _UserCreateState extends State<UserCreate> {
@@ -15,24 +19,11 @@ class _UserCreateState extends State<UserCreate> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void save() {
-    UserController user = UserController();
-    Map a = {
-      'username': usernameController.text,
-      'phone': phoneController.text,
-      'password': passwordController.text,
-    };
-    user.store(a).then((value) {
-      print(value);
-      if (value != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>UserIndex()));
-        SnackBarMessages.successSnackBar(context, 'Data added successfully!');
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('User Add'),
@@ -61,7 +52,9 @@ class _UserCreateState extends State<UserCreate> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
-        onPressed: save,
+        onPressed: (){
+          userProvider.save(usernameController.text, phoneController.text, passwordController.text, context);
+        },
       ),
     );
   }

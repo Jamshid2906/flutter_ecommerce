@@ -1,39 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ecommerce/src/app/controllers/AuthController.dart';
 import 'package:flutter_ecommerce/src/app/controllers/UserController.dart';
-import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
-import 'package:flutter_ecommerce/src/pages/mainPage.dart';
-import 'package:flutter_ecommerce/src/pages/users/create.dart';
-import 'package:flutter_ecommerce/src/pages/users/edit.dart';
+import 'package:flutter_ecommerce/src/app/providers/UserProvider.dart';
+import 'package:provider/provider.dart';
 
 class UserIndex extends StatefulWidget {
   UserIndex({Key? key}) : super(key: key);
 
   @override
   _UserIndexState createState() => _UserIndexState();
+
+  static Widget screen() => ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      builder: (context, child) => UserIndex()
+    );
 }
 
 class _UserIndexState extends State<UserIndex> {
-
-  void _delete(String id){
-    UserController().delete(id).then((value) {
-      if(value == true) {
-        SnackBarMessages.successSnackBar(context, 'Item Deleted successfullty!');
-        Navigator.pop(context);
-        setState(() {
-          
-        });
-      }
-    });
-  }
   @override
   Widget build(BuildContext context) {
+
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Users List'),
-        leading: IconButton(onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
-        }, icon: Icon(Icons.arrow_back_ios)),
+        leading: IconButton(
+            onPressed: () {
+              userProvider.backMainScreen(context);
+            },
+            icon: Icon(Icons.arrow_back_ios)),
       ),
       body: FutureBuilder<List?>(
         future: UserController().index(),
@@ -45,8 +40,7 @@ class _UserIndexState extends State<UserIndex> {
                 print(snapshot.data);
                 return ListTile(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => UserEdit(id: snapshot.data![index].id,)));
+                    userProvider.nextEditScreen(snapshot.data![index].id, context);
                   },
                   // tileColor:Colors.red,
                   subtitle: Text('Phone ${snapshot.data![index]['phone']}'),
@@ -54,18 +48,24 @@ class _UserIndexState extends State<UserIndex> {
                   title: Text(snapshot.data![index]['username']),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
-                   onPressed: () {
-                      showDialog(context: context, builder: (context){  
-                        return AlertDialog(
-                          title: Text('Delete Item'),
-                          content: Text('Are you sure to delete item?'),
-                          actions: [
-                            ElevatedButton(onPressed: (){}, child: Text('Cancel')),
-                            ElevatedButton(onPressed: (){_delete(snapshot.data![index].id);}, 
-                            child: Text('Coniform')),
-                          ],
-                        );
-                      });
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Delete Item'),
+                              content: Text('Are you sure to delete item?'),
+                              actions: [
+                                ElevatedButton(
+                                    onPressed: () {}, child: Text('Cancel')),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      userProvider.delete(snapshot.data![index].id,context);
+                                    },
+                                    child: Text('Coniform')),
+                              ],
+                            );
+                          });
                     },
                   ),
                 );
@@ -82,8 +82,7 @@ class _UserIndexState extends State<UserIndex> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UserCreate()));
+          userProvider.nextCreateScreen(context);
         },
       ),
     );
