@@ -13,8 +13,10 @@ class AuthController {
   }
   Future<String?> signUp(Map<String,dynamic> request) async
   {
+    var email = request['email'].toString().trim();
+    var password = request['password'].toString().trim();
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: request['email'], password: request['password']);
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       return "up";
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -23,8 +25,10 @@ class AuthController {
 
   Future<String?> signIn(Map<String,dynamic> request) async 
   {
+    var email = request['email'].toString().trim();
+    var password = request['password'].toString().trim();
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(email: request['email'], password: request['password']);
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       return "in";
     } on FirebaseAuthException catch  (e) {
       return e.message;

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce/src/app/controllers/CategoryController.dart';
 import 'package:flutter_ecommerce/src/model/data.dart';
 import 'package:flutter_ecommerce/src/themes/light_color.dart';
 import 'package:flutter_ecommerce/src/themes/theme.dart';
@@ -17,6 +18,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  void initState() { 
+    super.initState();
+     CategoryController().index().then((value){
+       var categories = value;
+       print(categories[0].name);
+    });
+  }
+
   Widget _icon(IconData icon, {Color color = LightColor.iconColor}) {
     return Container(
       padding: EdgeInsets.all(10),

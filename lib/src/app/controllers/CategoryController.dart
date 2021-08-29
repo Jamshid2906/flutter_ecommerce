@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_ecommerce/src/app/database/database.dart';
+import 'package:flutter_ecommerce/src/model/category.dart';
 
 class CategoryController {
 
@@ -9,12 +10,17 @@ class CategoryController {
     this.category = Database().firestore.collection('categories');
   }
 
-  Future<List?> index() async {
+  Future<List<Category>> index() async {
     QuerySnapshot querySnapshot;
     querySnapshot = await category.get();
-    if(querySnapshot.docs.isNotEmpty){
-      return querySnapshot.docs.toList();
-    }
+    List<Category> categories = querySnapshot.docs.map((value) {
+      return Category(name: value['name'], image: '');
+    }).toList();
+
+    return categories;
+    // if(querySnapshot.docs.isNotEmpty){
+    //   return querySnapshot.docs.toList();
+    // }
   }
 
   Future store(Map request) async{

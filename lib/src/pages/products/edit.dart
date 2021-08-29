@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/src/app/controllers/ProductController.dart';
+import 'package:flutter_ecommerce/src/app/providers/ProductProvider.dart';
 import 'package:flutter_ecommerce/src/messages/SnackbarMessages.dart';
 import 'package:flutter_ecommerce/src/pages/products/index.dart';
-
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class ProductEdit extends StatefulWidget {
@@ -10,6 +11,11 @@ class ProductEdit extends StatefulWidget {
   String id;
   @override
   _ProductEditState createState() => _ProductEditState();
+
+  Widget screen() => ChangeNotifierProvider(
+      create: (context) => ProductProvider(),
+      builder: (context,child) => ProductEdit(id: id)
+    );
 }
 
 class _ProductEditState extends State<ProductEdit> {
@@ -23,38 +29,29 @@ class _ProductEditState extends State<ProductEdit> {
     // ignore: todo
     // TODO: implement initState
     ProductController().edit(widget.id).then((value) {
-      if(value != null){
-        nameController.text  = value['name'];
+      if (value != null) {
+        nameController.text = value['name'];
         priceController.text = value['price'];
-        descController.text  = value['desc'];
+        descController.text = value['desc'];
       }
     });
   }
 
-  void _update() {
-    Map a = {
-      'name': nameController.text,
-      'price': priceController.text,
-      'desc': descController.text,
-    };
-    ProductController().update(a,widget.id).then((value) {
-      print(value);
-      if (value != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductIndex()));
-        SnackBarMessages.successSnackBar(context, 'Data updated successfully!');
-      }
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
+
+    final productProvider = Provider.of<ProductProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Edit'),
-        leading:IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back_ios_new))
-      ),
+          title: Text('Product Edit'),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back_ios_new))),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -72,7 +69,7 @@ class _ProductEditState extends State<ProductEdit> {
               keyboardType: TextInputType.multiline,
               // textInputAction: TextInputAction.newline,
               maxLines: 5,
-              controller: descController, 
+              controller: descController,
               decoration: InputDecoration(labelText: 'Description'),
             ),
           ],
@@ -80,7 +77,9 @@ class _ProductEditState extends State<ProductEdit> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
-        onPressed: _update,
+        onPressed: (){
+          productProvider.update(nameController.text, priceController.text, descController.text, widget.id, context);
+        },
       ),
     );
   }
